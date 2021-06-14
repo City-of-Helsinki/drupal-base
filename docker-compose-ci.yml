@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  robo:
+    container_name: "python-automation"
+    image: "ghcr.io/city-of-helsinki/helfi-test-automation-python:1.0"
+    volumes:
+      - ./helfi-test-automation-python:/app:delegated
+    networks:
+      - internal
+      - stonehenge-network
+networks:
+  internal:
+    external: false
+  stonehenge-network:
+    external: true

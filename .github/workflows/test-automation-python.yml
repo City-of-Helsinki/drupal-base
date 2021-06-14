@@ -1,0 +1,28 @@
+on: [push]
+name: Integration tests
+env:
+  TEST_AUTOMATION_REPOSITORY: "ghcr.io/city-of-helsinki/helfi-test-automation-python:1.0"
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          name: City-of-Helsinki/helfi-test-automation-python
+          fetch-depth: 1
+
+      - name: Install and start Stonehenge
+        run: |
+          git clone -b 3.x https://github.com/druidfi/stonehenge.git $HOME/stonehenge
+          cd $HOME/stonehenge && make up
+
+      - name: Start Docker containers
+        run: docker-compose -f docker-compose-ci.yml up -d
+
+      - name: Setup Drupal
+        run: |
+          make new
+          docker-compose exec app bash -c "drush upwd helfi-admin Test_Automation"
+
+      - name: Run tests
+        run: docker-compose exec python-automation /bin/bash -c "robot -i GALLERY -A /helfi-robotframework/environments/ci.args -d robotframework-reports /helfi-robotframework/robotframework-tests/Teams/Dev/Platform/Article/Gallery.robot"
