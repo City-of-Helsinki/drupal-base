@@ -13,7 +13,7 @@ services:
       context: ./docker/local
     environment:
       APP_ENV: "${APP_ENV:-dev}"
-      DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME}"
+      DRUPAL_ROUTES: "https://varnish-${DRUPAL_HOSTNAME},http://${COMPOSE_PROJECT_NAME}-app.${COMPOSE_PROJECT_NAME}_internal:8080"
       DRUSH_OPTIONS_URI: "https://${DRUPAL_HOSTNAME}"
       #XDEBUG_ENABLE: "true"
       SIMPLETEST_BASE_URL: "http://app:8080"
