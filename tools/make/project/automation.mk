@@ -1,3 +1,5 @@
+-include .env.ci
+
 PHONY += automation-start
 
 automation-up:
